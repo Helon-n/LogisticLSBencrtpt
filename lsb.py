@@ -14,16 +14,15 @@ def encode_lsb(img, message):
         for j in range(img.shape[1]):
             for k in range(3):
                 binary_pixel = format(img[i][j][k], '08b')
-                # print(binary_pixel[7])
+                p = int(binary_message[binary_message_index])^int(binary_pixel[7])
                 binary_lsb = binary_lsb + binary_pixel[7]
-                new_binary_pixel = binary_pixel[:-1] + binary_message[binary_message_index]
+                new_binary_pixel = binary_pixel[:-1] + str(p)
                 binary_message_index += 1
                 img[i][j][k] = int(new_binary_pixel, 2)
                 n = n+1
                 if binary_message_index >= len(binary_message):
                     # print(n)
                     return img, binary_lsb
-    
     return img
 
 def decode_lsb(img):
@@ -38,6 +37,7 @@ def decode_lsb(img):
     for i in range(0, len(binary_message), 8):
         message += chr(int(binary_message[i:i+8], 2))
     return message
+
 def recov_lsb(img,message):
     
     msg_index = 0
@@ -45,7 +45,14 @@ def recov_lsb(img,message):
         for j in range(img.shape[1]):
             for k in range(3):
                 binary_pixel = format(img[i][j][k], '08b')
-                new_binary_pixel = binary_pixel[:-1] + message[msg_index]
+                binary=str(int(binary_pixel[7])^int(message[msg_index]))
+                new_binary_pixel = binary_pixel[:-1] + binary
                 msg_index=msg_index+1
                 img[i][j][k] = int(new_binary_pixel, 2)
     return img
+#test
+# p = cv2.imread("3.png")
+
+# s , code = encode_lsb(p,"-sdas-d-ad")
+# s = recov_lsb(s,code)
+# print(decode_lsb(s))
