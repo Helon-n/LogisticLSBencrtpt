@@ -18,9 +18,9 @@ def main():
     if opt_name in ('-h','--help'):
         print("[*] Help info")
 
-        print("[*] python3 tools.py -m encrypt -f file_path -k key -o output")
+        print("[*] python3 go.py -m encrypt -f file_path -k key -o output")
 
-        print("[*] python3 tools.py -m decrypt -f file_path -c code -o output")
+        print("[*] python3 go.py -m decrypt -f file_path -c code -o output")
 
         print("[*] key example r-g-b-init- ")
 
@@ -67,9 +67,10 @@ def main():
     f=open(code,'r')
     img = cv2.imread(fileName)
     code = f.read()
+    img = lsb.recov_lsb(img,code)
     key = lsb.decode_lsb(img)
     print(key)
-    img = lsb.recov_lsb(img,code)
+    
     img = chaosrgb(img,key)
     cv2.imwrite(output_file,img)
 
